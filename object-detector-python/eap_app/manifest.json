@@ -1,0 +1,23 @@
+{
+    "schemaVersion": "1.2",
+    "acapPackageConf": {
+        "setup": {
+            "appName": "start_eap_container",
+            "friendlyName": "Python Detector EAP Container Example",
+            "vendor": "Axis Communications",
+            "embeddedSdkVersion": "3.0",
+            "runMode": "never",
+            "version": "0.0.1",
+            "user": {
+                "username": "root",
+                "group": "root"
+            }
+        },
+        "installation": {
+            "postInstallScript": "postinstall.sh"
+        },
+        "uninstallation": {
+            "preUninstallScript": "preuninstall.sh"
+        }
+    }
+}

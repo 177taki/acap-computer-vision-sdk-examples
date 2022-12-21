@@ -1,12 +1,11 @@
-ARG ARCH=armv7hf
+ARG ARCH=aarch64
 ARG SDK_VERSION=1.2.1
 ARG REPO=axisecp
 
-FROM arm32v7/ubuntu:20.04 as runtime-image-armv7hf
-FROM arm64v8/ubuntu:20.04 as runtime-image-aarch64
+FROM ubuntu:20.04 as runtime-image
 
 FROM $REPO/acap-computer-vision-sdk:$SDK_VERSION-$ARCH AS cv-sdk
-FROM runtime-image-${ARCH}
+FROM runtime-image
 COPY --from=cv-sdk /axis/python /
 COPY --from=cv-sdk /axis/python-numpy /
 COPY --from=cv-sdk /axis/python-tfserving /
