@@ -1,5 +1,29 @@
 *Copyright (C) 2021, Axis Communications AB, Lund, Sweden. All Rights Reserved.*
 
+# Build & Install eap packed container ACAP
+
+```bash
+export APP_NAME=acap4-object-detector-python
+export MODEL_NAME=acap-dl-models
+export ARCH=aarch64
+docker buildx build --platform linux/arm64 --tag $APP_NAME --build-arg ARCH .
+docker buildx build --platform linux/arm64 --file Dockerfile.model --tag $MODEL_NAME .
+docker save $APP_NAME -o app.tar
+docker save $MODEL_NAME -o model.tar
+docker pull axisecp/acap-runtime:1.1.2-aarch64-containerized
+docker save axisecp/acap-runtime:1.1.2-aarch64-containerized -o runtime.tar
+
+mv *.tar eap_app
+cd eap_app
+mkdir -p build
+export EAP_NAME=container-eap
+docker build --tag $EAP_NAME --build-arg ARCH .
+docker cp $(docker create $EAP_NAME):/opt/app/ ./build
+
+cd build/app
+curl --anyauth -u root:pass -F file=@Python_Detector_EAP_Container_Example_0_0_1_aarch64.eap "http://ip/axis-cgi/applications/upload.cgi"
+```
+
 # An inference example application on an edge device
 
 This example is written in Python and implements the following object detection scenarios:
