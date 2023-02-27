@@ -13,9 +13,6 @@
                 "group": "root"
             }
         },
-        "installation": {
-            "postInstallScript": "postinstall.sh"
-        },
         "uninstallation": {
             "preUninstallScript": "preuninstall.sh"
         }
