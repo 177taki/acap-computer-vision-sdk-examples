@@ -1,6 +1,5 @@
 #!/bin/sh
 
-. ./env.config
 DOCKER_CLI=/usr/local/bin/docker
 
 load_images() {
@@ -26,6 +25,8 @@ cd -P -- "$(dirname -- "$0")" || {
 
 # Trap SIGINT and SIGTERM
 trap 'stop_containers' 2 15
+
+. ./env.config
 
 load_images ${MODEL_NAME} model.tar
 load_images ${INFERENCE_SERVER_IMAGE} runtime.tar
