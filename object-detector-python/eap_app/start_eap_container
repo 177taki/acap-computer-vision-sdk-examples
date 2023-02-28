@@ -1,24 +1,16 @@
 #!/bin/sh
 
+. ./env.config
 DOCKER_CLI=/usr/local/bin/docker
 
 load_images() {
-	images=(${MODEL_NAME} ${INFERENC_SERVER_IMAGE} ${APP_NAME})
-	tar_files=(model.tar runtime.tar app.tar)
-	
-	for i in 0 1 2
-	do
-		DOCKER_IMAGE=$(${DOCKER_CLI} image ls -q ${images[$i]})
-		if [ x"${DOCKER_IMAGE}" != x"" ] ; then
-    	echo "Found: ${images[$i]}"
-		else
-      echo "Not found: start loading.. ${images[$i]}"
-		  echo "${DOCKER_CLI} load -i ${tar_files[$i]}"
-		fi
-	done
-	#/usr/local/bin/docker load -i runtime.tar
-	#/usr/local/bin/docker load -i app.tar
-	#/usr/local/bin/docker load -i model.tar
+  DOCKER_IMAGE=$(${DOCKER_CLI} image ls -q $1)
+  if [ x"${DOCKER_IMAGE}" != x"" ] ; then
+    echo "Found: $1"
+  else
+    echo "Not found: start loading $1 .."
+    ${DOCKER_CLI} load -i $2
+  fi
 }
 
 stop_containers()  {
@@ -35,9 +27,9 @@ cd -P -- "$(dirname -- "$0")" || {
 # Trap SIGINT and SIGTERM
 trap 'stop_containers' 2 15
 
-source ./env.config
-
-load_images
+load_images ${MODEL_NAME} model.tar
+load_images ${INFERENCE_SERVER_IMAGE} runtime.tar
+load_images ${APP_NAME} app.tar
 
 ${DOCKER_CLI} compose --env-file "./env.config" up
 
